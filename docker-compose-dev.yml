@@ -5,10 +5,10 @@ services:
     env_file: .env
     ports:
       - "8000:8000"
-    restart: unless-stopped
-    command: python3 src/main.py
     volumes:
       - ./src/:/usr/app/src
+      - ./hot-reload.py:/usr/app/hot-reload.py
+    command: python3 -u hot-reload.py
     environment:
       - IS_DOCKER=1
       - PYTHONUNBUFFERED=1
