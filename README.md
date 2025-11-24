@@ -1,5 +1,7 @@
 # Staliaswarden
 
+## Forked from [StalwartWarden](https://github.com/romdim/staliaswarden)
+
 ## Problem and Solution
 
 I created this application in order to combat the spamming I got on my main email. There are many services like SimpleLogin, Anonaddy, etc. that let you create aliases for your main email.
@@ -14,10 +16,12 @@ Clone this repo in your server.
 Create a `.env` like `.env.example`.
 
 - Create an `API_TOKEN` to be used here and in your bitwarden extension.
-- The `ALIAS_DOMAIN` should be your email domain (optional).
-- `FORWARD_TO` should keep the main email all aliases will forward to.
+- The `ALIAS_DOMAIN` should be your email domain.
 - `STALWART_URL` is the domain (or IP) you host your stalwart instance.
-- `STALWART_USERNAME` & `STALWART_PASSWORD` are self-explanatory. (I tried with tokens but none worked)
+- Stalwart authentication either:
+  - `STALWART_USERNAME` & `STALWART_PASSWORD` are self-explanatory.
+  - `STALWART_TOKEN` is a personal access token:
+      - Add `admin` role and all permissions related to princial, especially modifying principals' information.
 - `PORT` is the app's port.
 
 Run `docker compose up -d`.
@@ -28,9 +32,15 @@ Generate an alias through the bitwarden browser extension.
 
 1. Go to Generator -> Username -> Forwarded email alias.
 2. Select Addy.io in the Service field.
-3. Fill in your email domain.
+3. Fill in your custom email e.g. `stalwart@<ALIAS_DOMAIN>`.
 4. The API key you saved in the .env of this application.
 5. Fill in this app's url.
 
 Now every time you create a new login you can ask a new username and it will create one in your stalwart instance which you can immediately use through bitwarden.
 Cheers!
+
+## Dependencies
+
+- [Stalwart Server](https://github.com/stalwartlabs/stalwart)
+- [Docker Compose](https://docs.docker.com/compose/)
+- Python dependencies: none, the source code uses standard libraries.
