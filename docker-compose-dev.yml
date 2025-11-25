@@ -7,7 +7,7 @@ services:
       - "8000:8000"
     volumes:
       - ./src/:/usr/app/src
-      - ./hot-reload.py:/usr/app/hot-reload.py
+      - ./dev_utils/hot-reload.py:/usr/app/hot-reload.py
     command: python3 -u hot-reload.py
     environment:
       - IS_DOCKER=1

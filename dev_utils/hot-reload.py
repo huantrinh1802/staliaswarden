@@ -5,6 +5,7 @@ import subprocess
 APP_COMMAND = ["python", "src/main.py"]  # change if needed
 DEBOUNCE_MS = 200  # avoid restart-spam
 
+
 def get_files_mtime():
     mtimes = {}
     for root, dirs, files in os.walk("./src"):
@@ -13,6 +14,7 @@ def get_files_mtime():
                 path = os.path.join(root, file)
                 mtimes[path] = os.path.getmtime(path)
     return mtimes
+
 
 def watch_and_reload(proc):
     last = get_files_mtime()
@@ -26,6 +28,7 @@ def watch_and_reload(proc):
             return  # exit watcher → main loop restarts app
         last = current
 
+
 def main():
     while True:
         print("🚀 Starting app...")
@@ -35,6 +38,7 @@ def main():
 
         # brief debounce to avoid loops
         time.sleep(DEBOUNCE_MS / 1000)
+
 
 if __name__ == "__main__":
     main()
