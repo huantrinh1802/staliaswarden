@@ -1,4 +1,5 @@
 import contextlib
+from functools import wraps
 import inspect
 import json
 import logging
@@ -8,6 +9,7 @@ from contextvars import ContextVar
 from datetime import datetime, timezone
 from logging.handlers import TimedRotatingFileHandler
 from typing import Any, override
+from uuid import uuid4
 
 correlation_id: ContextVar[str] = ContextVar("correlation_id")
 start_time: ContextVar[datetime] = ContextVar("start_time")
@@ -43,7 +45,7 @@ class Logger(logging.Logger):
         if id := correlation_id.get(None):
             log["correlation_id"] = id
         if start_time.get(None):
-            log['duration'] = str(datetime.now(timezone.utc) - start_time.get())
+            log["duration"] = str(datetime.now(timezone.utc) - start_time.get())
         if self.name:
             log["module"] = self.name
         if extras_data := extras.get(None):
@@ -58,14 +60,14 @@ class Logger(logging.Logger):
         self._log(self.EXCEPTION_LEVEL, message, data)
 
     @override
-    def _log(self, level: int, msg: str, args: dict[str, Any], exc_info=None, extra=None, stack_info=False, stacklevel=2, frame_level=2): # type: ignore # pyright: ignore
+    def _log(self, level: int, msg: str, args: dict[str, Any], exc_info=None, extra=None, stack_info=False, stacklevel=2, frame_level=2):  # type: ignore # pyright: ignore
         self.logger.log(level, json.dumps(self.build_log(level, msg, args, frame_level), default=str))
 
     @override
-    def info(self, msg, *args, **kwargs):
-        if 'data' in kwargs:
-            data = kwargs['data']
-            del kwargs['data']
+    def info(self, msg, *args, **kwargs):  # type: ignore
+        if "data" in kwargs:
+            data = kwargs["data"]
+            del kwargs["data"]
         elif len(args) > 0 and isinstance(args[0], dict):
             data = args[0]
             args = args[1:]
@@ -75,9 +77,9 @@ class Logger(logging.Logger):
 
     @override
     def warn(self, msg, *args, **kwargs):
-        if 'data' in kwargs:
-            data = kwargs['data']
-            del kwargs['data']
+        if "data" in kwargs:
+            data = kwargs["data"]
+            del kwargs["data"]
         elif len(args) > 0 and isinstance(args[0], dict):
             data = args[0]
             args = args[1:]
@@ -86,9 +88,9 @@ class Logger(logging.Logger):
         self._log(logging.WARNING, msg, data, frame_level=3)
 
     def warning(self, msg, *args, **kwargs):
-        if 'data' in kwargs:
-            data = kwargs['data']
-            del kwargs['data']
+        if "data" in kwargs:
+            data = kwargs["data"]
+            del kwargs["data"]
         elif len(args) > 0 and isinstance(args[0], dict):
             data = args[0]
             args = args[1:]
@@ -98,9 +100,9 @@ class Logger(logging.Logger):
 
     @override
     def error(self, msg, *args, **kwargs):
-        if 'data' in kwargs:
-            data = kwargs['data']
-            del kwargs['data']
+        if "data" in kwargs:
+            data = kwargs["data"]
+            del kwargs["data"]
         elif len(args) > 0 and isinstance(args[0], dict):
             data = args[0]
             args = args[1:]
@@ -110,9 +112,9 @@ class Logger(logging.Logger):
 
     @override
     def exception(self, msg, *args, **kwargs):
-        if 'data' in kwargs:
-            data = kwargs['data']
-            del kwargs['data']
+        if "data" in kwargs:
+            data = kwargs["data"]
+            del kwargs["data"]
         elif len(args) > 0 and isinstance(args[0], dict):
             data = args[0]
             args = args[1:]
@@ -179,4 +181,3 @@ class Logger(logging.Logger):
         time_token = start_time.set(datetime.now(timezone.utc))
         yield
         start_time.reset(time_token)
-

@@ -3,9 +3,63 @@ import string
 
 from config import Config
 
-FIRST_NAMES = [ "alex", "ben", "chris", "dana", "emma", "frank", "gina", "henry", "irene", "jack", "kate", "liam", "maria", "nate", "olivia", "paul", "quinn", "rachel", "sam", "tina", "uma", "victor", "wanda", "xavier", "yara", "zane", ]
+FIRST_NAMES = [
+    "alex",
+    "ben",
+    "chris",
+    "dana",
+    "emma",
+    "frank",
+    "gina",
+    "henry",
+    "irene",
+    "jack",
+    "kate",
+    "liam",
+    "maria",
+    "nate",
+    "olivia",
+    "paul",
+    "quinn",
+    "rachel",
+    "sam",
+    "tina",
+    "uma",
+    "victor",
+    "wanda",
+    "xavier",
+    "yara",
+    "zane",
+]
 
-LAST_NAMES = [ "adams", "baker", "cooper", "diaz", "evans", "fisher", "gomez", "hayes", "iverson", "jones", "khan", "lee", "morgan", "nelson", "owens", "patel", "quinn", "roberts", "smith", "turner", "uribe", "vargas", "watson", "xu", "young", "zimmerman", ]
+LAST_NAMES = [
+    "adams",
+    "baker",
+    "cooper",
+    "diaz",
+    "evans",
+    "fisher",
+    "gomez",
+    "hayes",
+    "iverson",
+    "jones",
+    "khan",
+    "lee",
+    "morgan",
+    "nelson",
+    "owens",
+    "patel",
+    "quinn",
+    "roberts",
+    "smith",
+    "turner",
+    "uribe",
+    "vargas",
+    "watson",
+    "xu",
+    "young",
+    "zimmerman",
+]
 
 SEPARATORS = ["", ".", "_", "-"]
 
@@ -22,7 +76,7 @@ def random_name():
     return first, last
 
 
-def pattern_email(first: str, last: str, domain: str):
+def pattern_email(first: str, last: str, domain: str) -> str:
     """Create a realistic-looking local part based on name and common patterns."""
     sep = random.choice(SEPARATORS)
     pattern = random.choice(
@@ -68,16 +122,12 @@ def pattern_email(first: str, last: str, domain: str):
     local = local.replace(" ", "").replace("'", "").lower()
     # sometimes add a short year-like component (born year or joined year)
     if random.random() < 0.12:
-        year = random.choice(
-            [str(random.randint(70, 99)), str(random.randint(2000, 2024))]
-        )
+        year = random.choice([str(random.randint(70, 99)), str(random.randint(2000, 2024))])
         local = f"{local}{year}"
     return f"{local}@{domain}"
 
 
 def generate_alias(domain: str | None = "random") -> str:
-    selected_domain = (
-        Config.alias_domain if domain == "random" or domain is None else domain
-    )
+    selected_domain = Config.alias_domain if domain == "random" or domain is None else domain
     first, last = random_name()
     return pattern_email(first, last, selected_domain)

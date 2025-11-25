@@ -3,17 +3,15 @@ import os
 import re
 from pathlib import Path
 
-LINE_RE = re.compile(r'^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$')
+LINE_RE = re.compile(r"^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$")
+
 
 def parse_value(raw: str) -> str:
     """Parse a .env value similar to python-dotenv."""
     raw = raw.strip()
 
     # Remove surrounding single/double quotes
-    if (
-        (raw.startswith('"') and raw.endswith('"')) or
-        (raw.startswith("'") and raw.endswith("'"))
-    ):
+    if (raw.startswith('"') and raw.endswith('"')) or (raw.startswith("'") and raw.endswith("'")):
         raw = raw[1:-1]
 
     return raw
@@ -30,7 +28,7 @@ def load_env(file_path: str = ".env", override: bool = False):
 
     env_file = Path(file_path)
     if not env_file.is_file():
-        raise FileNotFoundError(file_path)     
+        raise FileNotFoundError(file_path)
     for line in env_file.read_text().splitlines():
         line = line.strip()
         if not line or line.startswith("#"):
@@ -47,8 +45,10 @@ def load_env(file_path: str = ".env", override: bool = False):
             os.environ[key] = value
 
         os.environ[key] = value
-if os.environ.get('IS_DOCKER') != '1':
-    load_env('.env')
+
+
+if os.environ.get("IS_DOCKER") != "1":
+    load_env(".env")
 
 
 class Config(object):
@@ -56,9 +56,9 @@ class Config(object):
     api_token: str | None = os.environ.get("API_TOKEN")
     forward_to: str | None = os.environ.get("FORWARD_TO")
     port: str | None = os.environ.get("PORT")
-    if 'STALWART_TOKEN' in os.environ:
-        stalwart_token: str = f'Bearer {os.environ.get("STALWART_TOKEN")}'
+    if "STALWART_TOKEN" in os.environ:
+        stalwart_token: str = f"Bearer {os.environ.get('STALWART_TOKEN')}"
     else:
         creds = f"{os.environ['STALWART_USERNAME']}:{os.environ['STALWART_PASSWORD']}".encode("utf-8")
         stalwart_token = "Basic " + str(base64.b64encode(creds).decode("utf-8"))
-    stalwart_url: str | None = os.environ.get("STALWART_URL")
+    stalwart_url: str = os.environ["STALWART_URL"]
