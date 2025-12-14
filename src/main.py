@@ -43,7 +43,10 @@ async def handle_create_alias(request: Request) -> Response:
         return JsonResponse(500, {"error": "Failed to delete alias"})
     body = cast(dict[str, str], request.body)
     user, root_domain = body["domain"].split("@")
-    alias = generate_alias(root_domain)
+    if 'alias' in body:
+        alias = body['alias']
+    else:
+        alias = generate_alias(root_domain)
     added_alias: bool = await add_alias_to_stalwart(user, alias)
     if not added_alias:
         return JsonResponse(500, {"error": "Failed to create alias"})
