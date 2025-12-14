@@ -1,3 +1,6 @@
+[tool.pyright]
+typecheckingMode = "basic"
+
 [tool.ruff]
 line-length = 800
 
